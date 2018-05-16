@@ -1,9 +1,6 @@
 package com.company.gui;
 
-import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 /**
  * User: malek
@@ -13,47 +10,11 @@ import java.awt.event.ActionListener;
 
 public class Main {
 
-    private static class TestPanel extends JPanel {
-
-        int x = this.getWidth(), y = this.getHeight();
-
-        @Override
-        protected void paintComponent(Graphics g) {
-            super.paintComponent(g);
-            x = this.getWidth();
-            y = this.getHeight();
-
-            g.drawString("This is a test panel string", x/10, y/10);
-        }
-    }
-
     public static void main(String[] args) {
 
-        TestPanel tp = new TestPanel();
+        DefaultFrame mainFrame = new DefaultFrame("Tic-Tac-Toe",400, 200);
 
-        JButton clickMeButton = new JButton("Click me!");
-        clickMeButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                System.exit(1);
-            }
-        });
-
-        JPanel container = new JPanel();
-        container.setLayout(new BorderLayout());
-        container.add(tp, BorderLayout.CENTER);
-        container.add(tp, BorderLayout.SOUTH);
-
-        JFrame window = new JFrame("Tic-Tac-Toe");
-
-        window.setContentPane(container);
-        window.setSize(500, 500);
-        window.setLocation(0, 0);
-        window.add(tp, BorderLayout.CENTER);
-        window.add(clickMeButton, BorderLayout.SOUTH);
-        window.setVisible(true);
-
-
-//        JOptionPane.showMessageDialog(null, "Hello world!");
+        mainFrame.add(new MenuPanel(), BorderLayout.CENTER);
+        mainFrame.setVisible(true);
     }
 }

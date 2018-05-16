@@ -3,7 +3,8 @@ package com.company.console;
 import com.company.utility.*;
 
 import java.util.Scanner;
-import static com.company.console.InputHandler.*;
+
+import static com.company.console.InputHandler.checkInput;
 
 /**
  * Initializing a game for two players (user or computer opponent)
@@ -95,14 +96,14 @@ public class Main {
         // Game loop
         while(player1.getNumberOfWins() < (numberOfRounds/2 + 1) && player2.getNumberOfWins() < (numberOfRounds/2 + 1)) {
 
-            // Sign change every round
+            // Sign changed every round
             Short temp = player1.getSign();
             player1.setSign(player2.getSign());
             player2.setSign(temp);
 
             System.out.println(player1.getSign());
 
-            // Round loop. Can end with a WIN or a DRAW. After each case the board gets reset.
+            // Game loop. Can end with a WIN or a DRAW. After each case the board gets reset.
             while(true) {
 
                 short flag;
