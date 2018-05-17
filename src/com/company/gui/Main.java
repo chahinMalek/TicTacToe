@@ -1,7 +1,5 @@
 package com.company.gui;
 
-import java.awt.*;
-
 /**
  * User: malek
  * Date: 5/3/2018
@@ -12,9 +10,8 @@ public class Main {
 
     public static void main(String[] args) {
 
-        DefaultFrame mainFrame = new DefaultFrame("Tic-Tac-Toe",400, 200);
+        GameFrame mainFrame = new GameFrame("Tic-Tac-Toe",400, 200);
 
-        mainFrame.add(new MenuPanel(), BorderLayout.CENTER);
         mainFrame.setVisible(true);
     }
 }
