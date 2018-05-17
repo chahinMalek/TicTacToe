@@ -36,8 +36,8 @@ public class Game {
         this.player2 = player2;
 
         // FIXME player 1 should have the value 1
-        this.player1.setSign(-1);
-        this.player2.setSign(1);
+        this.player1.setSign(1);
+        this.player2.setSign(-1);
 
         this.boardSize = boardSize;
         board = new int[boardSize+2][boardSize+2];
@@ -95,8 +95,6 @@ public class Game {
     public boolean anyMovesLeft() {
         return (free.size() != 0);
     }
-
-    // TODO check if needed
 
     /**
      * Returns the first (user) player

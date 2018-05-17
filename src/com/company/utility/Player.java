@@ -5,6 +5,8 @@ package com.company.utility;
  */
 public abstract class Player {
 
+    private Move lastMove = null;
+
     /**
      * Represents every type of a move in this game
      */
@@ -75,7 +77,7 @@ public abstract class Player {
     /**
      * Sets the number of wins of a player to 0
      */
-    Player() {
+    public Player() {
         this.numberOfWins = 0;
     }
 
@@ -136,8 +138,9 @@ public abstract class Player {
      */
     public Short move(Game game) {
 
-        Move move = findOptimalMove(game);
+        Move move = lastMove = findOptimalMove(game);
         int x = move.getRow(), y = move.getColumn();
+
         game.board[x][y] += (getSign() == 1) ? (short) 1 : -1;
 
         if(game.isWinningMove(this, x, y)) {
@@ -147,6 +150,26 @@ public abstract class Player {
             return 2;
         }
         return 1;
+    }
+
+    // TODO add to documentation
+    public Short move(Game game, int x, int y) {
+
+        lastMove = getMove((short) x, y);
+
+        game.board[x][y] += (getSign() == 1) ? (short) 1 : -1;
+
+        game.removeField((x-1)*game.getBoardSize() + (y-1));
+        game.incrementMoveCounter();
+
+        if(game.isWinningMove(this, x, y)) {
+
+            increaseNumberOfWins();
+            game.reloadBoard();
+            return 2;
+        }
+        return 1;
+
     }
 
     /**
@@ -184,5 +207,9 @@ public abstract class Player {
 
     private void increaseNumberOfWins() {
         this.numberOfWins++;
+    }
+
+    public Move getLastMove() {
+        return lastMove;
     }
 }

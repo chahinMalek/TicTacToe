@@ -26,8 +26,6 @@ public abstract class AI extends Player {
         // Moves with priority
         LinkedList<Short> priorities = getPriorityMoves(game);
 
-        // TODO separate into smaller function
-
         if(game.free.size() == Math.pow(game.getBoardSize(), 2)) {
 
             int boardSize = game.getBoardSize(), cornerSize = (boardSize % 2 == 0) ? 2 * boardSize : 2 * boardSize-1;

@@ -19,6 +19,10 @@ public class MainButton extends JButton implements MouseListener {
     private Color hoverColor = Color.decode("#00aced");
     private Color backgroundColor = Color.decode("#181c26");
 
+    public MainButton() {
+        this("");
+    }
+
     public MainButton(String text) {
 
         setFont(defaultFont);

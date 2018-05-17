@@ -1,7 +1,6 @@
 package com.company.gui;
 
-import com.company.utility.Game;
-import com.company.utility.Player;
+import com.company.utility.*;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -18,9 +17,21 @@ import java.awt.event.ActionListener;
 public class GameFrame extends JFrame implements ActionListener {
 
     private String ABOUT = "Tic-Tac-Toe\nMade By: Malek Chahin\n2018\n\nSource code: https://github.com/chahinMalek/TicTacToe\n\n";
+    private String HELP = "How To Play\n\n" +
+            "Game Options\n" +
+            "New Game: Starts a new game with the current game settings\n" +
+            "Reset Game: The Reset Game button in the game menu resets the whole game, not just the board's state\n" +
+            "Main Menu: Takes you back to the main screen\n" +
+            "Quit Game: Quits the whole game process\n\n" +
+            "Game Settings\n" +
+            "Board size: You decide whether you play on a 3x3 or 4x4 game board\n" +
+            "Opponent: You can play vs a friend or the computer\n" +
+            "Best of?: Choose the number of games you want to play with your opponent\n" +
+            "AI level: Can you beat the HARD AI? I think not!\n";
 
-    Player player1, player2;
-    Game game;
+    private int boardSize = 3, numberOfRounds = 1, sign = 1, aiLevel = 1;
+    private Player player1, player2, currentPlayer;
+    private Game game;
 
     private GameMenuItem resetMenuButton, mainMenuButton;
 
@@ -30,7 +41,6 @@ public class GameFrame extends JFrame implements ActionListener {
     private Font font = new Font("Arial", Font.PLAIN, 30);
     private Color backgroundColor = Color.decode("#181c26");
     private Color foregroundColor = Color.decode("#ffffff");
-    private JMenuBar menuBar;
 
     /************************************************ INNER CLASSES **************************************************/
 
@@ -75,9 +85,10 @@ public class GameFrame extends JFrame implements ActionListener {
     /**
      *
      */
-    private class GamePanel extends JPanel {
+    private class GamePanel extends JPanel implements ActionListener {
 
-        private MainButton gameButton;
+        private BoardButton gameButton;
+        private BoardButton[][] gameButtonMatrix;
 
         GamePanel() {
             this(3);
@@ -87,14 +98,99 @@ public class GameFrame extends JFrame implements ActionListener {
 
             setBackground(backgroundColor);
             setLayout(new GridLayout(size, size, 5, 5));
+            gameButtonMatrix = new BoardButton[size][size];
 
             for(int i=0; i<size; i++) {
                 for(int j=0; j<size; j++) {
-                    add(gameButton = new MainButton(i + " " + j));
-                    gameButton.addActionListener(GameFrame.this);
+
+                    gameButton = new BoardButton(i+1, j+1);
+                    gameButton.setActionCommand((i+1) + " " + (j+1));
+                    gameButton.setText("");
+
+                    gameButton.addActionListener(this);
+                    gameButtonMatrix[i][j] = gameButton;
+
+                    add(gameButton);
                 }
             }
 
+        }
+
+        void resetPanel() {
+
+            int size = gameButtonMatrix.length;
+
+            for(int i=0; i<size; i++) {
+                for(int j=0; j<size; j++) {
+
+                    gameButtonMatrix[i][j].setText("");
+                }
+            }
+
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+
+            BoardButton button = (BoardButton) e.getSource();
+
+            if(!button.getText().equals("")) {
+                return;
+            }
+
+            userPlayMove(button);
+
+            if(currentPlayer instanceof AI) {
+                aiPlayMove();
+
+                if(currentPlayer instanceof AI) {
+                    aiPlayMove();
+                }
+            }
+        }
+
+        private BoardButton getButton(int x, int y) {
+            return gameButtonMatrix[x][y];
+        }
+
+        private void userPlayMove(BoardButton button) {
+
+            sign = currentPlayer.getSign();
+
+            int moveFlag = currentPlayer.move(game, button.getRow(), button.getColumn());
+
+            button.setText((sign == 1) ? "X" : "O");
+
+            switchPlayerAndCheckWin(moveFlag);
+        }
+
+        private void aiPlayMove() {
+
+            sign = currentPlayer.getSign();
+
+            int moveFlag = currentPlayer.move(game);
+
+            int x = currentPlayer.getLastMove().getRow(), y = currentPlayer.getLastMove().getColumn();
+            getButton(x-1, y-1).setText(currentPlayer.getSign() == 1 ? "X" : "O");
+
+            switchPlayerAndCheckWin(moveFlag);
+        }
+
+        private void switchPlayerAndCheckWin(int moveFlag) {
+
+            currentPlayer = (currentPlayer == player1) ? player2 : player1;
+
+            if(moveFlag == 2 || !game.anyMovesLeft()) {
+
+                resetPanel();
+                game.reloadBoard();
+
+                int temp = player2.getSign();
+                player2.setSign(player1.getSign());
+                player1.setSign(temp);
+
+                currentPlayer = (player1.getSign() == 1) ? player1 : player2;
+            }
         }
     }
 
@@ -106,11 +202,12 @@ public class GameFrame extends JFrame implements ActionListener {
         SettingsPanel() {
 
             setFont(font);
-            setLayout(new GridLayout(1, 3));
+            setLayout(new GridLayout(2, 2));
             setBackground(backgroundColor);
 
             initializeBoardSizeMenu();
-            initializeDifficultyMenu();
+            initializeOpponentMenu();
+            initializeNumberOfRoundsMenu();
             initializeAILevelMenu();
         }
 
@@ -129,7 +226,7 @@ public class GameFrame extends JFrame implements ActionListener {
 
             boardSizePanel.add(label);
 
-            Dimension d = new Dimension(20, 100);
+            Dimension d = new Dimension(50, 60);
             boardSizePanel.add(new Box.Filler(d, d, d));
 
             ButtonGroup boardSizePicked = new ButtonGroup();
@@ -137,14 +234,14 @@ public class GameFrame extends JFrame implements ActionListener {
             gameRadioButton = new GameRadioButton("3x3");
             gameRadioButton.setSelected(true);
 
-            gameRadioButton.addActionListener(GameFrame.this);
+            gameRadioButton.addActionListener(this);
 
             boardSizePicked.add(gameRadioButton);
             boardSizePanel.add(gameRadioButton);
 
             gameRadioButton = new GameRadioButton("4x4");
 
-            gameRadioButton.addActionListener(GameFrame.this);
+            gameRadioButton.addActionListener(this);
 
             boardSizePicked.add(gameRadioButton);
             boardSizePanel.add(gameRadioButton);
@@ -153,7 +250,46 @@ public class GameFrame extends JFrame implements ActionListener {
 
         }
 
-        private void initializeDifficultyMenu() {
+        private void initializeNumberOfRoundsMenu() {
+
+            JPanel boardSizePanel = new JPanel();
+            boardSizePanel.setLayout(new BoxLayout(boardSizePanel, BoxLayout.Y_AXIS));
+
+            boardSizePanel.setBackground(backgroundColor);
+
+            boardSizePanel.setBackground(backgroundColor);
+            JLabel label = new JLabel("Best of? ");
+            label.setFont(font);
+            label.setBackground(backgroundColor);
+            label.setForeground(foregroundColor);
+
+            Dimension d = new Dimension(50, 60);
+            boardSizePanel.add(new Box.Filler(d, d, d));
+
+            boardSizePanel.add(label);
+
+            boardSizePanel.add(new Box.Filler(d, d, d));
+
+            ButtonGroup boardSizePicked = new ButtonGroup();
+
+            for(int i=1; i<=7; i+=2) {
+
+                gameRadioButton = new GameRadioButton(Integer.toString(i));
+
+                if(i == 1) {
+                    gameRadioButton.setSelected(true);
+                }
+
+                gameRadioButton.addActionListener(this);
+
+                boardSizePicked.add(gameRadioButton);
+                boardSizePanel.add(gameRadioButton);
+            }
+
+            add(boardSizePanel);
+        }
+
+        private void initializeOpponentMenu() {
 
             JPanel container = new JPanel();
             container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
@@ -166,12 +302,9 @@ public class GameFrame extends JFrame implements ActionListener {
             label.setBackground(backgroundColor);
             label.setForeground(foregroundColor);
 
-            Dimension d = new Dimension(50, 150);
-            container.add(new Box.Filler(d, d, d));
-
             container.add(label);
 
-            d = new Dimension(20, 100);
+            Dimension d = new Dimension(50, 60);
             container.add(new Box.Filler(d, d, d));
 
             ButtonGroup buttonGroup = new ButtonGroup();
@@ -203,26 +336,28 @@ public class GameFrame extends JFrame implements ActionListener {
             label.setBackground(backgroundColor);
             label.setForeground(foregroundColor);
 
+            Dimension d = new Dimension(50, 60);
+            aiLevelPanel.add(new Box.Filler(d, d, d));
+
             aiLevelPanel.add(label);
 
-            Dimension d = new Dimension(50, 100);
             aiLevelPanel.add(new Box.Filler(d, d, d));
 
             ButtonGroup buttonGroup = new ButtonGroup();
 
             gameRadioButton = new GameRadioButton("Easy");
-            gameRadioButton.addActionListener(GameFrame.this);
+            gameRadioButton.addActionListener(this);
             gameRadioButton.setSelected(true);
             buttonGroup.add(gameRadioButton);
             aiLevelPanel.add(gameRadioButton);
 
             gameRadioButton = new GameRadioButton("Medium");
-            gameRadioButton.addActionListener(GameFrame.this);
+            gameRadioButton.addActionListener(this);
             buttonGroup.add(gameRadioButton);
             aiLevelPanel.add(gameRadioButton);
 
             gameRadioButton = new GameRadioButton("Hard");
-            gameRadioButton.addActionListener(GameFrame.this);
+            gameRadioButton.addActionListener(this);
             buttonGroup.add(gameRadioButton);
             aiLevelPanel.add(gameRadioButton);
 
@@ -238,12 +373,56 @@ public class GameFrame extends JFrame implements ActionListener {
             System.out.println("Settings Menu Panel");
 
             switch (actionCommand) {
+
+                case "3x3":
+                    boardSize = 3;
+                    return;
+
+                case "4x4":
+                    boardSize = 4;
+                    return;
+
+                case "1":
+                case "3":
+                case "5":
+                case "7":
+                    numberOfRounds = Integer.parseInt(actionCommand);
+                    return;
+
                 case "Player":
                     aiLevelPanel.setVisible(false);
+                    player2 = new User();
                     return;
 
                 case "Computer":
                     aiLevelPanel.setVisible(true);
+
+                    if(aiLevel == 1) {
+                        player2 = new EasyAI();
+
+                    } else if(aiLevel == 2) {
+                        player2 = new MediumAI();
+
+                    } else {
+                        player2 = new HardAI();
+                    }
+
+                    return;
+
+                case "Easy":
+                    System.out.println("Easy");
+                    player2 = new EasyAI();
+                    return;
+
+                case "Medium":
+                    System.out.println("Medium");
+                    player2 = new MediumAI();
+                    return;
+
+                case "Hard":
+                    System.out.println("Hard");
+                    player2 = new HardAI();
+                    return;
             }
         }
     }
@@ -292,6 +471,12 @@ public class GameFrame extends JFrame implements ActionListener {
         cl.show(panelContainer, "1");
 
         add(panelContainer);
+
+        player1 = new User();
+        player1.setSign(1);
+
+        player2 = new User();
+        player2.setSign(-1);
     }
 
     private void setOffset(int leftRight, int topBottom) {
@@ -376,13 +561,24 @@ public class GameFrame extends JFrame implements ActionListener {
 
             case "New Game Menu Button":
             case "New Game Button":
-
                 resetMenuButton.setVisible(true);
                 mainMenuButton.setVisible(true);
 
                 setOffset(200, 100);
-                cl.show(panelContainer, "2");
 
+                panelContainer.add(new GamePanel(boardSize), "2");
+                cl.show(panelContainer, "2");
+                game = new Game(player1, player2, boardSize, numberOfRounds);
+
+                currentPlayer = player1;
+                return;
+
+            case "Reset Game Button":
+            case "Reset Game Menu Button":
+
+                panelContainer.add(new GamePanel(boardSize), "2");
+                cl.show(panelContainer, "2");
+                game = new Game(player1, player2, boardSize, numberOfRounds);
                 return;
 
             case "Main Menu Button":
@@ -397,8 +593,8 @@ public class GameFrame extends JFrame implements ActionListener {
             case "Quit Game Menu Button":
             case "Quit Game Button":
 
-                if(JOptionPane.showConfirmDialog(getParent(), "Are you sure you want to exit?", "Tic-Tac-Toe", JOptionPane.YES_NO_OPTION)
-                        == JOptionPane.YES_NO_OPTION) {
+                if(JOptionPane.showConfirmDialog(getParent(), "Are you sure you want to exit?", "Tic-Tac-Toe",
+                        JOptionPane.YES_NO_OPTION) == JOptionPane.YES_NO_OPTION) {
                     System.exit(1);
                 }
 
@@ -406,7 +602,6 @@ public class GameFrame extends JFrame implements ActionListener {
 
             case "Settings Button":
             case "Settings Menu Button":
-
                 mainMenuButton.setVisible(true);
                 setOffset(200, 100);
                 cl.show(panelContainer, "3");
@@ -414,6 +609,10 @@ public class GameFrame extends JFrame implements ActionListener {
 
             case "About Us":
                 JOptionPane.showMessageDialog(getParent(), ABOUT);
+                return;
+
+            case "How to play":
+                JOptionPane.showMessageDialog(getParent(), HELP);
                 return;
 
             default:

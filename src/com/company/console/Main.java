@@ -96,13 +96,6 @@ public class Main {
         // Game loop
         while(player1.getNumberOfWins() < (numberOfRounds/2 + 1) && player2.getNumberOfWins() < (numberOfRounds/2 + 1)) {
 
-            // Sign changed every round
-            Short temp = player1.getSign();
-            player1.setSign(player2.getSign());
-            player2.setSign(temp);
-
-            System.out.println(player1.getSign());
-
             // Game loop. Can end with a WIN or a DRAW. After each case the board gets reset.
             while(true) {
 
@@ -143,6 +136,11 @@ public class Main {
                 }
             }
             game.reloadBoard();
+
+            // Sign changed every round
+            Short temp = player1.getSign();
+            player1.setSign(player2.getSign());
+            player2.setSign(temp);
         }
     }
 }
