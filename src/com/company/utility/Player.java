@@ -114,6 +114,14 @@ public abstract class Player {
     }
 
     /**
+     * Accessor method to set the calling <em>Player</em> object's <em>number of wins</em> value
+     * @param numberOfWins the value to be set
+     */
+    public void setNumberOfWins(int numberOfWins) {
+        this.numberOfWins = (short) numberOfWins;
+    }
+
+    /**
      * Mutator method to get the calling <em>Move</em> object's <em>sign</em>
      * @return <em>int</em> value that represents the calling <em>Player</em> object's sign
      */

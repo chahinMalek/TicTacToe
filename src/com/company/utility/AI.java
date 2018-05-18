@@ -130,6 +130,7 @@ public abstract class AI extends Player {
             return 0;
         }
 
+        boolean flag = isMaximizer;
         isMaximizer = !isMaximizer;
         depth++;
 
@@ -173,7 +174,9 @@ public abstract class AI extends Player {
             revertMove(game, tMove, (isMaximizer) ? this.getSign() : -this.getSign());
         }
 
-        return nodeValue;
+        // Makes the AI a bit smarter when choosing which move to play
+        // It will choose the move which will lead him to an optimal result in the fastest way
+        return nodeValue + ((flag) ? (-depth) : depth);
     }
 
     /**
