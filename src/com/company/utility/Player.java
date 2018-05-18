@@ -160,15 +160,23 @@ public abstract class Player {
         return 1;
     }
 
-    // TODO add to documentation
+    /**
+     * Method that is used by a <em>Player</em> instance (mainly made for the user class)
+     * to play a move in the current game
+     *
+     * @param game represents the current game
+     * @param x represents the <em>Player</em> move's row index
+     * @param y represents the <em>Player</em> move's column index
+     * @return <em>short</em> value 2 if the last move resulted a win, otherwise 1 if the move was legal
+     */
     public Short move(Game game, int x, int y) {
 
+        // Will be used in the gui package
         lastMove = getMove((short) x, y);
 
         game.board[x][y] += (getSign() == 1) ? (short) 1 : -1;
 
         game.removeField((x-1)*game.getBoardSize() + (y-1));
-        game.incrementMoveCounter();
 
         if(game.isWinningMove(this, x, y)) {
 

@@ -11,7 +11,6 @@ public class Game {
     int[][] board;
     LinkedList<Short> free;
     private int boardSize;
-    private int moveCounter;
     private Player player1, player2;
 
     private final int ROUNDS;
@@ -35,7 +34,6 @@ public class Game {
         this.player1 = player1;
         this.player2 = player2;
 
-        // FIXME player 1 should have the value 1
         this.player1.setSign(1);
         this.player2.setSign(-1);
 
@@ -53,7 +51,6 @@ public class Game {
         while(!free.isEmpty()) free.removeFirst();
 
         for(short i=0; i<boardSize*boardSize; i++) free.add(i);
-        moveCounter = 0;
 
         for(int i=0; i<boardSize+2; i++) {
 
@@ -120,6 +117,15 @@ public class Game {
         return boardSize;
     }
 
+    /**
+     * Returns a boolean value <em>true</em> if the move, which row and column indexes are passed as
+     * the parameters <strong><em>x</em></strong> and <strong><em>y</em></strong>, is a winning move,
+     * <em>false</em> otherwise
+     * @param player represents the <em>Player</em> instance which made the move
+     * @param x row index of the <em>player</em> parameter's move
+     * @param y column index of the <em>player</em> parameter's move
+     * @return value that represents the current boards's dimensions
+     */
     boolean isWinningMove(Player player, int x, int y) {
         short point = player.getSign();
 
@@ -142,10 +148,10 @@ public class Game {
         return false;
     }
 
-    void incrementMoveCounter() {
-        moveCounter++;
-    }
-
+    /**
+     * Removes the <em>element</em> parameter from the <em>Game.free</em> list
+     * @param element element to be deleted
+     */
     void removeField(int element) {
         Iterator<Short> it = free.listIterator();
 

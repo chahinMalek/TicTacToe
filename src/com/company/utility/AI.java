@@ -18,7 +18,7 @@ public abstract class AI extends Player {
     @Override
     public Move findOptimalMove(Game game) {
 
-        // The agent is always the maximizer
+        // The AI agent is always the maximizer
 
         int minimaxValue;
         Move bestMove = new Move(), temp;
@@ -60,6 +60,7 @@ public abstract class AI extends Player {
 
             minimaxMove = moves.poll();
 
+            // Check if the minimaxMove variable value is stored in the priorityMove collection
             if(priorityMove != null && !priorityMove.equals(minimaxMove)) {
                 moves.add(minimaxMove);
                 continue;

@@ -23,6 +23,7 @@ public class HardAI extends AI {
         int currentPriority;
         LinkedList<Short> resultList = new LinkedList<>(), priorityList = new LinkedList<>();
 
+        // Store the open move's priorities in the priorityList variable
         for(short move : game.free) {
             currentPriority = moveScore(game, getMove(move, game.getBoardSize()));
             priorityList.add((short) currentPriority);
@@ -34,6 +35,7 @@ public class HardAI extends AI {
             maxPriority--;
         }
 
+        // Store the moves with the best priority (for the hard ai) in the resultList variable
         for(int i=0; i<game.free.size(); i++) {
             if(priorityList.get(i) >= maxPriority) {
                 resultList.add(game.free.get(i));

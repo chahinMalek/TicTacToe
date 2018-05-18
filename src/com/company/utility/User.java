@@ -64,7 +64,6 @@ public final class User extends Player {
         }
 
         game.removeField((x-1)*game.getBoardSize() + (y-1));
-        game.incrementMoveCounter();
 
         return new Move(x, y);
     }
