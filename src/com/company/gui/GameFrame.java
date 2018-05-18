@@ -14,6 +14,11 @@ import java.awt.event.ActionListener;
  * Time: 10:15 AM
  */
 
+/**
+ * Custom <em>JFrame</em> class that holds the whole game user interface and functionalities.
+ * This class implements the <em>ActionListener</em> interface so all the ActionEvents fired inside this class
+ * will be handled inside of this class (continue reading).
+ */
 public class GameFrame extends JFrame implements ActionListener {
 
     private String ABOUT = "Tic-Tac-Toe\nMade By: Malek Chahin\n2018\n\nSource code: https://github.com/chahinMalek/TicTacToe\n\n";
@@ -34,7 +39,6 @@ public class GameFrame extends JFrame implements ActionListener {
     private Game game;
 
     private GameMenuItem resetMenuButton, mainMenuButton;
-
     private CardLayout cl = new CardLayout();
     private JPanel panelContainer;
 
@@ -42,10 +46,9 @@ public class GameFrame extends JFrame implements ActionListener {
     private Color backgroundColor = Color.decode("#181c26");
     private Color foregroundColor = Color.decode("#ffffff");
 
-    /************************************************ INNER CLASSES **************************************************/
-
+    /////////////////////////////////////////////////// INNER CLASSES //////////////////////////////////////////////////
     /**
-     *
+     * Custom <em>JPanel</em> class that holds the user interface of the game's main screen.
      */
     private class MenuPanel extends JPanel {
 
@@ -72,7 +75,15 @@ public class GameFrame extends JFrame implements ActionListener {
             add(button);
         }
 
-        MenuPanel() {
+        /**
+         * Creates an instance of this class with custom style and three buttons.
+         * <strong><em>New Game Button</em></strong> creates a new game with two players set by default to <em>User</em>
+         * class instances.
+         * <strong><em>Settings Button</em></strong> creates a settings instance which will be explained later.
+         * <strong><em>Quit Game Button</em></strong> creates a dialog for the user to choose whether he wants to stop
+         * the created game process or not.
+         */
+        public MenuPanel() {
             super();
 
             setBackground(backgroundColor);
@@ -83,7 +94,9 @@ public class GameFrame extends JFrame implements ActionListener {
     }
 
     /**
-     *
+     * Custom <em>JPanel</em> class that is used in this class to create a user interface for the game. This class
+     * implements the <em>ActionListener</em> interface so every <em>ActionEvent</em> fired inside of this class will
+     * be handled inside of this class.
      */
     private class GamePanel extends JPanel implements ActionListener {
 
@@ -91,21 +104,33 @@ public class GameFrame extends JFrame implements ActionListener {
         private BoardButton[][] gameButtonMatrix;
         private JLabel player1Score, player2Score;
 
-        GamePanel() {
+        /**
+         * Creates a new instance of this class with the game board size set to 3x3 (by default).
+         */
+        public GamePanel() {
             this(3);
         }
 
+        /**
+         * Creates a new instance of this class with the game board size set to the value of the <em>size</em> parameter.
+         * Instances of this class will have a custom style.
+         * @param size the value to be set for the size of the game board.
+         */
         GamePanel(int size) {
 
             setLayout(new BorderLayout());
             setBackground(backgroundColor);
 
+            // BoardButton container
             JPanel board = new JPanel();
 
             board.setBackground(backgroundColor);
             board.setLayout(new GridLayout(size, size, 5, 5));
+
+            // Needed to store references to buttons
             gameButtonMatrix = new BoardButton[size][size];
 
+            // Panel button initialization
             for(int i=0; i<size; i++) {
                 for(int j=0; j<size; j++) {
 
@@ -122,6 +147,7 @@ public class GameFrame extends JFrame implements ActionListener {
 
             add(board, BorderLayout.CENTER);
 
+            // Creating a container panel for the labels that will represent the current number of wins for each player
             JPanel buttonContainer = new JPanel();
             buttonContainer.setLayout(new FlowLayout());
             buttonContainer.setBackground(backgroundColor);
@@ -145,25 +171,40 @@ public class GameFrame extends JFrame implements ActionListener {
             add(buttonContainer, BorderLayout.SOUTH);
         }
 
+        /**
+         * Event handler for this class. Every event of type <em>ActionEvent</em> fired inside of this class will
+         * be handled in this method.
+         * @param e
+         */
         @Override
         public void actionPerformed(ActionEvent e) {
 
             BoardButton button = (BoardButton) e.getSource();
 
+            // If the button is already clicked then it's value must not be changed again (until the next round)
             if(!button.getText().equals("")) {
                 return;
             }
+
+            // Handles user's move
             userPlayMove(button);
 
+            // Handles the computer's move
             if(currentPlayer instanceof AI) {
                 aiPlayMove();
 
+                // If the computer plays last in a game and has to play first in the next game, that case is handled
+                // this way.
                 if(currentPlayer instanceof AI) {
                     aiPlayMove();
                 }
             }
         }
 
+        /**
+         * Sets the text values for every instance of the <em>BoardButton</em> class available in this game to
+         * an empty string.
+         */
         private void resetPanel() {
 
             int size = gameButtonMatrix.length;
@@ -176,10 +217,22 @@ public class GameFrame extends JFrame implements ActionListener {
             }
         }
 
-        private BoardButton getButton(int x, int y) {
-            return gameButtonMatrix[x][y];
+        /**
+         * Mutator method to get a reference to the <em>BoardButton</em> object with the row and column indexes set
+         * by the <em>row</em> and <em>column</em> parameters respectively.
+         * @param row the row value to be set for the calling object's <em>row</em> value.
+         * @param column the column value to be set for the calling object's <em>column</em> value.
+         * @return a reference to a <em>BoardButton</em> object.
+         */
+        private BoardButton getButton(int row, int column) {
+            return gameButtonMatrix[row][column];
         }
 
+        /**
+         * Handles the user's move. Also switches the move to the next player and checks if the game is finished after
+         * this move (resulting a win or a draw).
+         * @param button represents a <em>BoardButton</em> reference to the button which the user pressed.
+         */
         private void userPlayMove(BoardButton button) {
 
             sign = currentPlayer.getSign();
@@ -187,9 +240,15 @@ public class GameFrame extends JFrame implements ActionListener {
 
             int moveFlag = currentPlayer.move(game, button.getRow(), button.getColumn());
 
+            // Switches the player to the next player and checks if the game is finished after the move is played
+            // (which is done in the lines above)
             switchPlayerAndCheckWin(moveFlag);
         }
 
+        /**
+         * Handles the user's move. Also switches the move to the next player and checks if the game is finished after
+         * this move (resulting a win or a draw).
+         */
         private void aiPlayMove() {
 
             sign = currentPlayer.getSign();
@@ -199,9 +258,27 @@ public class GameFrame extends JFrame implements ActionListener {
             int x = currentPlayer.getLastMove().getRow(), y = currentPlayer.getLastMove().getColumn();
             getButton(x-1, y-1).setText(currentPlayer.getSign() == 1 ? "X" : "O");
 
+            // Switches the player to the next player and checks if the game is finished after the move is played
+            // (which is done in the lines above)
             switchPlayerAndCheckWin(moveFlag);
         }
 
+        /**
+         * Switches the turn of the players. Sets the text values for the game score labels as the values the players
+         * have for their number of wins.
+         *
+         * Prompts a dialog in which the user can choose whether he wants a new game or not
+         * (only prompt at the end of a game). If a user chooses to play a new game then an <em>ActionEvent</em> is fired
+         * and handled inside this class, resetting the game with the same players.
+         * Vice versa, an <em>ActionEvent</em> is again fired that will also be handled
+         * inside this class, taking the user back to the main screen.
+         *
+         * If a game is finished with a draw then no changes will be made for the user's number of wins attribute.
+         *
+         * If an end of a game nor a round is reached then only a change of player turns is made.
+         *
+         * @param moveFlag
+         */
         private void switchPlayerAndCheckWin(int moveFlag) {
 
             currentPlayer = (currentPlayer == player1) ? player2 : player1;
@@ -211,37 +288,47 @@ public class GameFrame extends JFrame implements ActionListener {
 
             if(moveFlag == 2 || !game.anyMovesLeft()) {
 
+                // If the last move was a winning one (for the round)
                 if(moveFlag == 2) {
+
+                    // Prompts a dialog to inform the user that an end of the current round is reached
                     JOptionPane.showMessageDialog(getParent(), ((currentPlayer.getSign() == 1) ? "O won" : "X won")
                             + " the round");
 
-                } else {
+                // If the last move resulted a draw round (no moves left on the game board)
+                } else if(!game.anyMovesLeft()) {
                     JOptionPane.showMessageDialog(getParent(), "Draw game");
                 }
 
+                // If any of the players reached the winning amount of game rounds
                 if(player1.getNumberOfWins() == numberOfRounds/2 + 1 || player2.getNumberOfWins() == numberOfRounds/2 + 1) {
 
+                    // Generate a win message
                     String message = ((player1.getNumberOfWins() > player2.getNumberOfWins()) ? "Player 1 " : "Player 2 ") + "won!";
 
+                    // Prompt a dialog for the user to choose whether he wants to play a new game or not
                     if(JOptionPane.showConfirmDialog(getParent(), message + "\n\nNew Game?" , "Tic-Tac-Toe",
                             JOptionPane.YES_NO_OPTION) == JOptionPane.YES_NO_OPTION) {
 
-                        // New Game
+                        // New Game event fired
                         GameFrame.this.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED,
                                 "Reset Game Button"));
 
                     } else {
 
-                        // Return to main screen
+                        // Return to main screen event fired
                         GameFrame.this.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED,
                                 "Main Menu Button"));
                     }
                     return;
                 }
 
+                // WILL BE EXECUTED ONLY IF THE END OF THE GAME IS NOT REACHED YET
+                // Reset the game's state
                 resetPanel();
                 game.reloadBoard();
 
+                // Switch player turns (will be executed only if the end of the game is not reached)
                 int temp = player2.getSign();
                 player2.setSign(player1.getSign());
                 player1.setSign(temp);
@@ -473,8 +560,7 @@ public class GameFrame extends JFrame implements ActionListener {
             }
         }
     }
-
-    /*****************************************************************************************************************/
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public GameFrame() {
         this("New Frame", 200, 200);
