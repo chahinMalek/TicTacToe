@@ -21,7 +21,7 @@ public abstract class Player {
         /**
          * Default constructor
          */
-        Move() {
+        public Move() {
 
         }
 
@@ -33,7 +33,7 @@ public abstract class Player {
          * @param row value that represents the row where the move will be placed
          * @param column value that represents the column where the move will be placed
          */
-        Move(int row, int column) {
+        public Move(int row, int column) {
             this.row = row;
             this.column = column;
         }
@@ -85,7 +85,7 @@ public abstract class Player {
      * Copy constructor
      * @param player object whose values will be copied to the calling <em>Player</em> instance
      */
-    Player(Player player) {
+    public Player(Player player) {
 
         if(player == null) {
             System.out.println("Constructor argument must not be null!");
@@ -189,6 +189,14 @@ public abstract class Player {
     }
 
     /**
+     * Accessor method to get the current last move in the game.
+     * @return a value that represents the last move in the game of type <em>Move</em>
+     */
+    public Move getLastMove() {
+        return lastMove;
+    }
+
+    /**
      * Method that is used by the <em>move(Game)</em> method to decide which is the move that the calling <em>Player</em>
      * instance will choose to play next
      *
@@ -223,9 +231,5 @@ public abstract class Player {
 
     private void increaseNumberOfWins() {
         this.numberOfWins++;
-    }
-
-    public Move getLastMove() {
-        return lastMove;
     }
 }

@@ -46,7 +46,6 @@ public class GameFrame extends JFrame implements ActionListener {
     private Color backgroundColor = Color.decode("#181c26");
     private Color foregroundColor = Color.decode("#ffffff");
 
-    /////////////////////////////////////////////////// INNER CLASSES //////////////////////////////////////////////////
     /**
      * Custom <em>JPanel</em> class that holds the user interface of the game's main screen.
      */
@@ -107,7 +106,7 @@ public class GameFrame extends JFrame implements ActionListener {
         /**
          * Creates a new instance of this class with the game board size set to 3x3 (by default).
          */
-        public GamePanel() {
+        GamePanel() {
             this(3);
         }
 
@@ -174,7 +173,7 @@ public class GameFrame extends JFrame implements ActionListener {
         /**
          * Event handler for this class. Every event of type <em>ActionEvent</em> fired inside of this class will
          * be handled in this method.
-         * @param e
+         * @param e an <em>ActionEvent</em> instance.
          */
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -339,13 +338,27 @@ public class GameFrame extends JFrame implements ActionListener {
     }
 
     /**
-     * Settings panel
+     * Custom <em>JPanel</em> class that is used in this class to create a user interface for the game settings.
+     * This class implements the <em>ActionListener</em> interface so every <em>ActionEvent</em>
+     * fired inside of this class will be handled inside of this class.
      */
     private class SettingsPanel extends JPanel implements ActionListener {
 
         private GameRadioButton gameRadioButton, easyButton;
         private JPanel aiLevelPanel;
 
+        /**
+         * Creates an instance of this class with custom style and four options.
+         * <strong><em>Choosing the size of the board</em></strong>, a panel is created with a radio button group
+         * to choose between a 3x3 board size or 4x4 board size.
+         * <strong><em>Choosing the opponent</em></strong>, a panel is created with a radio button group to choose
+         * between a human opponent or the AI opponent.
+         * <strong><em>Choosing the number of rounds</em></strong>, a panel is created with a radio button group to
+         * choose a number of rounds for the game to last.
+         * <strong><em>Choosing the difficulty level of the AI</em></strong>, a panel is created with a radio button
+         * group to choose a difficulty level for the AI opponent to play against. This panel will appear only if the
+         * AI is chosen as the opposing player.
+         */
         SettingsPanel() {
 
             setFont(font);
@@ -358,6 +371,9 @@ public class GameFrame extends JFrame implements ActionListener {
             initializeAILevelMenu();
         }
 
+        /**
+         * Initializes a panel to choose the board size.
+         */
         private void initializeBoardSizeMenu() {
 
             JPanel boardSizePanel = new JPanel();
@@ -365,14 +381,14 @@ public class GameFrame extends JFrame implements ActionListener {
 
             boardSizePanel.setBackground(backgroundColor);
 
-            boardSizePanel.setBackground(backgroundColor);
+            // Adding a label for the user to know what he is choosing the value for.
             JLabel label = new JLabel("Choose board size: ");
             label.setFont(font);
             label.setBackground(backgroundColor);
             label.setForeground(foregroundColor);
-
             boardSizePanel.add(label);
 
+            // Creating a gap between the label and the radio group.
             Dimension d = new Dimension(50, 60);
             boardSizePanel.add(new Box.Filler(d, d, d));
 
@@ -380,14 +396,12 @@ public class GameFrame extends JFrame implements ActionListener {
 
             gameRadioButton = new GameRadioButton("3x3");
             gameRadioButton.setSelected(true);
-
             gameRadioButton.addActionListener(this);
 
             boardSizePicked.add(gameRadioButton);
             boardSizePanel.add(gameRadioButton);
 
             gameRadioButton = new GameRadioButton("4x4");
-
             gameRadioButton.addActionListener(this);
 
             boardSizePicked.add(gameRadioButton);
@@ -397,6 +411,9 @@ public class GameFrame extends JFrame implements ActionListener {
 
         }
 
+        /**
+         * Initializes a panel to choose the number of rounds for the game.
+         */
         private void initializeNumberOfRoundsMenu() {
 
             JPanel boardSizePanel = new JPanel();
@@ -404,7 +421,7 @@ public class GameFrame extends JFrame implements ActionListener {
 
             boardSizePanel.setBackground(backgroundColor);
 
-            boardSizePanel.setBackground(backgroundColor);
+            // Adding a label for the user to know what he is choosing the value for.
             JLabel label = new JLabel("Best of? ");
             label.setFont(font);
             label.setBackground(backgroundColor);
@@ -414,21 +431,18 @@ public class GameFrame extends JFrame implements ActionListener {
             boardSizePanel.add(new Box.Filler(d, d, d));
 
             boardSizePanel.add(label);
-
             boardSizePanel.add(new Box.Filler(d, d, d));
 
             ButtonGroup boardSizePicked = new ButtonGroup();
 
+            // Adding options to choose between the values 1, 3, 5 and 7 for the number of rounds for the game
             for(int i=1; i<=7; i+=2) {
 
                 gameRadioButton = new GameRadioButton(Integer.toString(i));
 
-                if(i == 1) {
-                    gameRadioButton.setSelected(true);
-                }
+                if(i == 1) gameRadioButton.setSelected(true);
 
                 gameRadioButton.addActionListener(this);
-
                 boardSizePicked.add(gameRadioButton);
                 boardSizePanel.add(gameRadioButton);
             }
@@ -436,6 +450,9 @@ public class GameFrame extends JFrame implements ActionListener {
             add(boardSizePanel);
         }
 
+        /**
+         * Initializes a panel to choose the opponent.
+         */
         private void initializeOpponentMenu() {
 
             JPanel container = new JPanel();
@@ -443,7 +460,7 @@ public class GameFrame extends JFrame implements ActionListener {
 
             container.setBackground(backgroundColor);
 
-            container.setBackground(backgroundColor);
+            // Adding a label for the user to know what he is choosing the value for.
             JLabel label = new JLabel("Choose opponent: ");
             label.setFont(font);
             label.setBackground(backgroundColor);
@@ -456,6 +473,7 @@ public class GameFrame extends JFrame implements ActionListener {
 
             ButtonGroup buttonGroup = new ButtonGroup();
 
+            // Adding buttons to choose between a human opponent player or the AI opponent.
             gameRadioButton = new GameRadioButton("Player");
             gameRadioButton.addActionListener(this);
             gameRadioButton.setSelected(true);
@@ -470,6 +488,9 @@ public class GameFrame extends JFrame implements ActionListener {
             add(container);
         }
 
+        /**
+         * Initializes a panel to choose the level of the AI opponent.
+         */
         private void initializeAILevelMenu() {
 
             aiLevelPanel = new JPanel();
@@ -477,7 +498,7 @@ public class GameFrame extends JFrame implements ActionListener {
 
             aiLevelPanel.setBackground(backgroundColor);
 
-            aiLevelPanel.setBackground(backgroundColor);
+            // Adding a label for the user to know what he is choosing the value for.
             JLabel label = new JLabel("Choose AI level: ");
             label.setFont(font);
             label.setBackground(backgroundColor);
@@ -492,6 +513,7 @@ public class GameFrame extends JFrame implements ActionListener {
 
             ButtonGroup buttonGroup = new ButtonGroup();
 
+            // Adding buttons to choose between an easy, medium or hard level of the AI opponent.
             easyButton = gameRadioButton = new GameRadioButton("Easy");
             gameRadioButton.addActionListener(this);
             gameRadioButton.setSelected(true);
@@ -508,10 +530,17 @@ public class GameFrame extends JFrame implements ActionListener {
             buttonGroup.add(gameRadioButton);
             aiLevelPanel.add(gameRadioButton);
 
+            // Disabling the visibility of this panel until the user selects the computer as the
+            // opposing player.
             aiLevelPanel.setVisible(false);
             add(aiLevelPanel);
         }
 
+        /**
+         * Event handler for this class. Every event of type <em>ActionEvent</em> fired inside of this class will
+         * be handled in this method.
+         * @param e an <em>ActionEvent</em> instance.
+         */
         @Override
         public void actionPerformed(ActionEvent e) {
 
@@ -519,65 +548,102 @@ public class GameFrame extends JFrame implements ActionListener {
 
             switch (actionCommand) {
 
+                // Setting the board size value to 3x3.
                 case "3x3":
                     boardSize = 3;
-                    return;
+                    break;
 
+                // Setting the board size value to 4x4.
                 case "4x4":
                     boardSize = 4;
-                    return;
+                    break;
 
+                // Setting the number of rounds value to on of the cases added below.
                 case "1":
                 case "3":
                 case "5":
                 case "7":
                     numberOfRounds = Integer.parseInt(actionCommand);
-                    return;
+                    break;
 
+                // Setting the opposing player of human type.
                 case "Player":
                     aiLevelPanel.setVisible(false);
                     easyButton.setSelected(true);
                     player2 = new User();
-                    return;
+                    break;
 
+                // Setting the opposing player of computer type.
                 case "Computer":
                     aiLevelPanel.setVisible(true);
                     player2 = new EasyAI();
+                    break;
 
-                    return;
-
+                // Setting the AI level to easy.
                 case "Easy":
                     player2 = new EasyAI();
-                    return;
+                    break;
 
+                // Setting the AI level to medium.
                 case "Medium":
                     player2 = new MediumAI();
-                    return;
+                    break;
 
+                // Setting the AI level to hard.
                 case "Hard":
                     player2 = new HardAI();
-                    return;
+                    break;
+
+                default:
+                    System.out.println(actionCommand);
+                    break;
             }
         }
     }
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    /**
+     * Creates a new instance of this class with the frame title set to a default value and a default
+     * gap from the screen edges.
+     */
     public GameFrame() {
         this("New Frame", 200, 200);
     }
 
+    /**
+     * Creates a new instance of this class with the frame title set to the value of <em>title</em> parameter
+     * and a default gap from the screen edges.
+     * @param title the value to be set as the frame title.
+     */
     public GameFrame(String title) {
         this(title, 200, 200);
     }
 
+    /**
+     * Creates a new instance of this class with the frame title set to a default value and a gap from
+     * the screen edges sized with the value of the <em>offset</em> parameter.
+     * @param offset the value for the gap size.
+     */
     public GameFrame(int offset) {
         this("New Frame", offset, offset);
     }
 
+    /**
+     * Creates a new instance of this class with the frame title set to the value of <em>title</em> parameter
+     * and a gap from the screen edges sized with the value of the <em>offset</em> parameter.
+     * @param title the value to be set as the frame title.
+     * @param offset the value for the gap size.
+     */
     public GameFrame(String title, int offset) {
         this(title, offset, offset);
     }
 
+    /**
+     * Creates a new instance of this class with the frame title set to the value of <em>title</em> parameter
+     * and a gap from the screen edges sized with the values of the <em>leftRight</em> and <em>topBottom</em> parameters.
+     * @param title the value to be set as the frame title.
+     * @param leftRight the value for the gap size from the left/right edge of the screen.
+     * @param topBottom the value for the gap size from the top/bottom edge of the screen.
+     */
     public GameFrame(String title, int leftRight, int topBottom) {
         super(title);
 
@@ -593,11 +659,16 @@ public class GameFrame extends JFrame implements ActionListener {
         setForeground(foregroundColor);
         getContentPane().setBackground(backgroundColor);
 
+        // Setting the custom offset that the user set the values for and initializing the game menu.
         setOffset(leftRight, topBottom);
         initializeMenu();
 
         panelContainer = new JPanel();
+
+        // Setting the layout as a card layout because the center part of this frame is changeable.
         panelContainer.setLayout(cl);
+
+        // Adding panels to be set in the center of this frame in the panelContainer and adding their constraint id
         panelContainer.add(new MenuPanel(), "1");
         panelContainer.add(new GamePanel(), "2");
         panelContainer.add(new SettingsPanel(), "3");
@@ -605,11 +676,116 @@ public class GameFrame extends JFrame implements ActionListener {
 
         add(panelContainer);
 
+        // Default player declarations.
         player1 = new User();
-
         player2 = new User();
     }
 
+    /**
+     * Event handler for this class. Every event of type <em>ActionEvent</em> fired inside of this class will
+     * be handled in this method.
+     * @param e an <em>ActionEvent</em> instance.
+     */
+    @Override
+    public void actionPerformed(ActionEvent e) {
+
+        String sourceActionCommand = e.getActionCommand();
+
+        switch (sourceActionCommand) {
+
+            // Creates a new Game instance and setting the main menu and reset game menu buttons to visible so
+            // the user can leave or restart the current game at any time.
+            case "New Game Menu Button":
+            case "New Game Button":
+                resetMenuButton.setVisible(true);
+                mainMenuButton.setVisible(true);
+                setOffset(200, 50);
+
+                // Firing an event because for the reset game because the rest of this case is identical to
+                // handling the reset game event handling.
+                this.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "Reset Game Button"));
+                break;
+
+            // Handling the event fired when the user clicks the reset game buttons
+            case "Reset Game Button":
+            case "Reset Game Menu Button":
+
+                // Makes the GamePanel added in the constructor to the panelContainer and setting it to be visible to
+                // the user.
+                panelContainer.add(new GamePanel(boardSize), "2");
+                cl.show(panelContainer, "2");
+
+                // Setting default values for the player attributes,
+                player1.setNumberOfWins(0);
+                player1.setSign(1);
+                player2.setNumberOfWins(0);
+                player2.setSign(-1);
+
+                // Creating a new Game instance so a new game is started.
+                game = new Game(player1, player2, boardSize, numberOfRounds);
+
+                currentPlayer = player1;
+                break;
+
+            // Handles the event fired when the user pressed the menu button.
+            case "Main Menu Button":
+
+                // Setting the next two buttons to not visible because they should only be visible in mid-game.
+                resetMenuButton.setVisible(false);
+                mainMenuButton.setVisible(false);
+
+                setOffset(400, 200);
+
+                // Setting the main screen visible to the user again.
+                cl.show(panelContainer, "1");
+                break;
+
+            // Handles the event fired when the user clicks to quit the game.
+            case "Quit Game Menu Button":
+            case "Quit Game Button":
+
+                // Prompts a confirmation dialog to the user so the user has to confirm that he wants to stop the
+                // game process.
+                if(JOptionPane.showConfirmDialog(getParent(), "Are you sure you want to exit?", "Tic-Tac-Toe",
+                        JOptionPane.YES_NO_OPTION) == JOptionPane.YES_NO_OPTION) {
+                    System.exit(1);
+                }
+                break;
+
+            // Handles the event fired when the user clicks to enter the game settings screen.
+            case "Settings Button":
+            case "Settings Menu Button":
+
+                mainMenuButton.setVisible(true);
+                resetMenuButton.setVisible(false);
+                setOffset(200, 100);
+                cl.show(panelContainer, "3");
+                break;
+
+            // Handles the event fired when the user clicks to see the 'About Us' section.
+            case "About Us":
+                // Prompting a dialog to the screen so the user can read the ABOUT variable's value.
+                JOptionPane.showMessageDialog(getParent(), ABOUT);
+                break;
+
+            // Handles the event fired when the user clicks to see the game instructions.
+            case "How to play":
+                // Prompting a dialog to the screen so the user can read the HELP variable's value.
+                JOptionPane.showMessageDialog(getParent(), HELP);
+                break;
+
+            default:
+                System.out.println(sourceActionCommand + " pressed!");
+                break;
+        }
+    }
+
+    /**
+     * Accessor method to set the values for the gaps from the edges of the screen to the content in the
+     * center of this frame.
+     * @param leftRight value to be set as the gap size from the left/right screen edges.
+     * @param topBottom value to be set as the gap size from the top/bottom screen edges.
+     */
     private void setOffset(int leftRight, int topBottom) {
 
         Dimension d = new Dimension(leftRight, topBottom);
@@ -619,11 +795,16 @@ public class GameFrame extends JFrame implements ActionListener {
         add(new Box.Filler(d, d, d), BorderLayout.EAST);
     }
 
+    /**
+     * Initializes the game menu bar.
+     */
     private void initializeMenu() {
 
         // Adding a game menu
         GameMenu gameMenu = new GameMenu("Game");
 
+        // Adding options for a new game, resetting the current game, returning to the main screen or stopping
+        // the game process and leaving the app.
         GameMenuItem gameMenuItem = new GameMenuItem("New Game");
         gameMenuItem.setActionCommand("New Game Menu Button");
         gameMenuItem.addActionListener(this);
@@ -646,6 +827,7 @@ public class GameFrame extends JFrame implements ActionListener {
         gameMenuItem.addActionListener(this);
         gameMenu.add(gameMenuItem);
 
+        // Creating a custom styled JMenuBar instance
         JMenuBar gameMenuBar = new JMenuBar();
         gameMenuBar.setBackground(Color.decode("#181c26"));
         gameMenuBar.setBorder(new EmptyBorder(0, 0, 2, 0));
@@ -681,79 +863,5 @@ public class GameFrame extends JFrame implements ActionListener {
 
         // Setting the gameMenuBar as the menu bar of the holding frame
         setJMenuBar(gameMenuBar);
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-
-        String sourceActionCommand = e.getActionCommand();
-
-        switch (sourceActionCommand) {
-
-            case "New Game Menu Button":
-            case "New Game Button":
-                resetMenuButton.setVisible(true);
-                mainMenuButton.setVisible(true);
-
-                setOffset(200, 50);
-
-                this.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "Reset Game Button"));
-                return;
-
-            case "Reset Game Button":
-            case "Reset Game Menu Button":
-
-                panelContainer.add(new GamePanel(boardSize), "2");
-                cl.show(panelContainer, "2");
-
-                player1.setNumberOfWins(0);
-                player1.setSign(1);
-                player2.setNumberOfWins(0);
-                player2.setSign(-1);
-
-                game = new Game(player1, player2, boardSize, numberOfRounds);
-
-                currentPlayer = player1;
-                return;
-
-            case "Main Menu Button":
-                resetMenuButton.setVisible(false);
-                mainMenuButton.setVisible(false);
-
-                setOffset(400, 200);
-                cl.show(panelContainer, "1");
-
-                return;
-
-            case "Quit Game Menu Button":
-            case "Quit Game Button":
-
-                if(JOptionPane.showConfirmDialog(getParent(), "Are you sure you want to exit?", "Tic-Tac-Toe",
-                        JOptionPane.YES_NO_OPTION) == JOptionPane.YES_NO_OPTION) {
-                    System.exit(1);
-                }
-
-                return;
-
-            case "Settings Button":
-            case "Settings Menu Button":
-                mainMenuButton.setVisible(true);
-                resetMenuButton.setVisible(false);
-                setOffset(200, 100);
-                cl.show(panelContainer, "3");
-                return;
-
-            case "About Us":
-                JOptionPane.showMessageDialog(getParent(), ABOUT);
-                return;
-
-            case "How to play":
-                JOptionPane.showMessageDialog(getParent(), HELP);
-                return;
-
-            default:
-                System.out.println(sourceActionCommand + " pressed!");
-                break;
-        }
     }
 }
