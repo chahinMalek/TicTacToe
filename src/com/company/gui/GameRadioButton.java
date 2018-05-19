@@ -29,7 +29,7 @@ public class GameRadioButton extends JRadioButton {
     /**
      * Creates an instance of this class with the radio button's text set to the value of the <em>text</em>
      * parameter and sets the radio button's style.
-     * @param text
+     * @param text a value to be set as the calling objects <em>text</em> value.
      */
     public GameRadioButton(String text) {
         super(text);

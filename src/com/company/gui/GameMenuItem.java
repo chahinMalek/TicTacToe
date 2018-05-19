@@ -34,7 +34,7 @@ public class GameMenuItem extends JMenuItem implements MouseListener {
     /**
      * Creates an instance of this class with the menu item's text set to the value of the <em>text</em>
      * parameter and sets the menu item's style.
-     * @param text
+     * @param text a value to be set as the calling objects <em>text</em> value.
      */
     public GameMenuItem(String text) {
 

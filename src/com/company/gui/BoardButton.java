@@ -31,16 +31,16 @@ public class BoardButton extends MainButton {
     }
 
     /**
-     *
-     * @return
+     * Mutator method to get the calling <em>BoardButton</em> object's <em>row</em> value.
+     * @return a value that represents the value of the <em>row</em> attribute.
      */
     public int getRow() {
         return this.row;
     }
 
     /**
-     * Mutator method to get the calling <em>BoardButton</em> object's <em>column</em> value
-     * @return
+     * Mutator method to get the calling <em>BoardButton</em> object's <em>column</em> value.
+     * @return a value that represents the value of the <em>column</em> attribute.
      */
     public int getColumn() {
         return this.column;
